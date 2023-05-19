@@ -33,11 +33,42 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
- 
-    app.get("/all-toy", async (req, res) => {
-        const result= await toyCollection.find().toArray();
+
+
+    const indexKeys = {toyName:1}
+    const indexOptions= {name:"titleSearch"};
+    const result = await toyCollection.createIndex(indexKeys,indexOptions);
+
+
+    app.get("/toy-name/:text", async (req, res) => {
+        const text = req.params.text;
+        const result = await toyCollection
+          .find({
+               toyName: { $regex: text, $options: "i" } 
+          })
+          .toArray();
         res.send(result);
       });
+ 
+    app.get("/all-toy", async (req, res) => {
+
+        
+        const result= await toyCollection.find().limit(20).toArray();
+        res.send(result);
+      });
+      
+    app.get("/all-toy/:cat", async (req, res) => {
+
+        
+        const result= await toyCollection.find({subCategory:req.params.cat}).toArray();
+        res.send(result);
+      });
+
+
+      app.get("/my-toy/:email", async(req,res)=>{
+        const result= await toyCollection.find({sellerEmail:req.params.email}).toArray();
+        res.send(result);
+      })
 
     app.post("/add-toy", async (req, res) => {
         const body = req.body;
