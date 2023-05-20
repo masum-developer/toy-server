@@ -9,9 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-
-console.log(process.env.DB_PASS);
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.obrngag.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -68,6 +65,12 @@ async function run() {
       
 
       const result = await toyCollection.findOne(query, options);
+      res.send(result);
+    })
+
+    app.get('/toy-gallery', async (req, res) => {
+      
+      const result= await toyCollection.find().limit(8).toArray();
       res.send(result);
     })
 
