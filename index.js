@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //await client.connect();
 
 
     const toyCollection = client.db('toyDatabase').collection('toy');
@@ -85,6 +85,23 @@ async function run() {
       const result = await toyCollection.findOne(query, options);
       res.send(result);
     })
+    
+    app.get("/all-toy/:cat", async (req, res) => {
+
+        
+      const result= await toyCollection.find({subCategory:req.params.cat}).toArray();
+      res.send(result);
+    });
+
+
+    app.get("/my-toy/descending/:email", async(req,res)=>{
+      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: -1 }).toArray();
+      res.send(result);
+    })
+    app.get("/my-toy/ascending/:email", async(req,res)=>{
+      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: 1 }).toArray();
+      res.send(result);
+    })
     app.delete('/toy-delete/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
@@ -110,22 +127,6 @@ async function run() {
 
     })
       
-    app.get("/all-toy/:cat", async (req, res) => {
-
-        
-        const result= await toyCollection.find({subCategory:req.params.cat}).toArray();
-        res.send(result);
-      });
-
-
-      app.get("/my-toy/descending/:email", async(req,res)=>{
-        const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: -1 }).toArray();
-        res.send(result);
-      })
-      app.get("/my-toy/ascending/:email", async(req,res)=>{
-        const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: 1 }).toArray();
-        res.send(result);
-      })
 
     app.post("/add-toy", async (req, res) => {
         const body = req.body;
