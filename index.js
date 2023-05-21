@@ -31,6 +31,12 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+    app.get("/all-toy", async (req, res) => {
+
+        
+      const result= await toyCollection.find().limit(20).toArray();
+      res.send(result);
+    });
 
     const indexKeys = {toyName:1}
     const indexOptions= {name:"titleSearch"};
@@ -47,12 +53,7 @@ async function run() {
         res.send(result);
       });
  
-    app.get("/all-toy", async (req, res) => {
-
-        
-        const result= await toyCollection.find().limit(20).toArray();
-        res.send(result);
-      });
+   
 
 
       app.get('/toy/:id', async (req, res) => {
@@ -102,14 +103,19 @@ async function run() {
       const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: 1 }).toArray();
       res.send(result);
     })
-    app.delete('/toy-delete/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) }
-      const result = await toyCollection.deleteOne(query);
-      res.send(result);
-    })
 
     
+
+    app.post("/add-toy", async (req, res) => {
+      const body = req.body;
+
+      console.log(body);
+      const result = await toyCollection.insertOne(body);
+      
+      res.send(result);
+
+    });
+
     app.patch('/toy-update/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -126,17 +132,12 @@ async function run() {
       res.send(result);
 
     })
-      
-
-    app.post("/add-toy", async (req, res) => {
-        const body = req.body;
-  
-        console.log(body);
-        const result = await toyCollection.insertOne(body);
-        
-        res.send(result);
-  
-      });
+    app.delete('/toy-delete/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await toyCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
   } finally {
