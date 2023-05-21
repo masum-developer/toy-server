@@ -33,7 +33,7 @@ async function run() {
       res.send(result);
     });
 
-   
+  //  toy search by name
     app.get("/toy-name/:text", async (req, res) => {
         const text = req.params.text;
         const result = await toyCollection
@@ -43,7 +43,7 @@ async function run() {
           .toArray();
         res.send(result);
       });
- 
+ // toy details
       app.get('/toy/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
@@ -75,6 +75,7 @@ async function run() {
       res.send(result);
     })
     
+    //sub category  toy
     app.get("/all-toy/:cat", async (req, res) => {
 
         
@@ -96,10 +97,8 @@ async function run() {
 
     app.post("/add-toy", async (req, res) => {
       const body = req.body;
-
       console.log(body);
       const result = await toyCollection.insertOne(body);
-      
       res.send(result);
 
     });
@@ -126,7 +125,6 @@ async function run() {
       const result = await toyCollection.deleteOne(query);
       res.send(result);
     })
-
 
   } finally {
    
