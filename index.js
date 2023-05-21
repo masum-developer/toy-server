@@ -85,11 +85,11 @@ async function run() {
 
 
     app.get("/my-toy/descending/:email", async(req,res)=>{
-      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: -1 }).toArray();
+      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: -1 }).collation({locale:"en_US",numericOrdering:true}).toArray();
       res.send(result);
     })
     app.get("/my-toy/ascending/:email", async(req,res)=>{
-      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: 1 }).toArray();
+      const result= await toyCollection.find({sellerEmail:req.params.email}).sort({ price: 1 }).collation({locale:"en_US",numericOrdering:true}).toArray();
       res.send(result);
     })
 
