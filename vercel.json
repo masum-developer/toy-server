@@ -11,6 +11,11 @@
         "src": "/(.*)",
         "dest": "/",
         "methods": ["GET","POST","PATCH","PUT","DELETE","OPTIONS"]
+      },
+      {
+        "src": "/all-toy",
+        "dest": "index.js"
+
       }
     ]
   }
