@@ -27,9 +27,9 @@ async function run() {
    
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    app.get("/all-toy", async (req, res) => {
+    app.get("/bestInstructor", async (req, res) => {
  
-      const result= await toyCollection.find().limit(20).toArray();
+      const result= await userCollection.find().limit(6).toArray();
       res.send(result);
     });
 
